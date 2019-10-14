@@ -1,3 +1,5 @@
+package lab1;
+
 public class Counter{
     private int val;
 
@@ -5,7 +7,7 @@ public class Counter{
         val = val+1;
     }
 
-    public int getVal(){
+    public synchronized int getVal(){
         return val;
     }
 

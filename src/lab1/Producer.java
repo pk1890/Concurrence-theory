@@ -1,3 +1,4 @@
+package lab1;
 
 public class Producer implements Runnable {
     private Buffer buffer;

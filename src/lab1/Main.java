@@ -1,3 +1,4 @@
+package lab1;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 /*        Counter counter = new Counter();
@@ -24,8 +25,8 @@ public class Main {
 
         Buffer buffer = new Buffer();
 
-        Consumer consumer = new Consumer(buffer);
-        Consumer consumer1 = new Consumer(buffer);
+        Consumer consumer = new Consumer(buffer, 1);
+        Consumer consumer1 = new Consumer(buffer, 2);
         Producer producer = new Producer(buffer);
 
         Thread c1 = new Thread(consumer);

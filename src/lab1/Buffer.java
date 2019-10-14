@@ -1,3 +1,5 @@
+package lab1;
+
 public class Buffer {
 
     private String buff;
