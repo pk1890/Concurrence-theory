@@ -1,8 +1,8 @@
 package lab2;
 
-public class BinarySemaphore {
+public class CountingSemaphore {
     private int value;
-    public BinarySemaphore(){
+    public CountingSemaphore(){
         value = 1;
     }
 

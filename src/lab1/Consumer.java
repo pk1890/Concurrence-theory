@@ -11,12 +11,12 @@ public class Consumer implements Runnable {
     public void run() {
 
         for(int i = 0;  i < 5;   i++) {
-            try {
-                String message = buffer.take();
+            //try {
+                String message = buffer.takeSem();
                 System.out.println(message + "::"+id);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            //} catch (InterruptedException e) {
+             //   e.printStackTrace();
+            //}
         }
 
     }
