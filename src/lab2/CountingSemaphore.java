@@ -2,13 +2,13 @@ package lab2;
 
 public class CountingSemaphore {
     private int value;
-    public CountingSemaphore(){
-        value = 1;
+    public CountingSemaphore(int value){
+        this.value = value;
     }
 
     public void V(){
         synchronized (this){
-            value = 1;
+            value ++;
             notifyAll();
         }
     }
@@ -22,7 +22,7 @@ public class CountingSemaphore {
                     e.printStackTrace();
                 }
             }
-            value = 0;
+            value --;
         }
     }
 }
