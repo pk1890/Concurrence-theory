@@ -1,22 +1,34 @@
 package lab1;
 
+import lab2.BinarySemaphore;
+
 public class Counter{
     private int val;
 
-    public synchronized void inc(){
+    BinarySemaphore semaphore;
+
+    public  void inc(){
+        semaphore.P();
         val = val+1;
+        semaphore.V();
     }
 
-    public synchronized int getVal(){
-        return val;
+    public  int getVal(){
+        semaphore.P();
+        int tmp =  val;
+        semaphore.V();
+        return tmp;
     }
 
-    public synchronized void dec() {
+    public  void dec() {
+        semaphore.P();
         val = val-1;
+        semaphore.V();
     }
 
 
     public Counter(){
         this.val = 0;
+        semaphore = new BinarySemaphore();
     }
 }

@@ -2,6 +2,11 @@ package lab2;
 
 public class CountingSemaphore {
     private int value;
+
+    public int getValue(){
+        return value;
+    }
+
     public CountingSemaphore(int value){
         this.value = value;
     }

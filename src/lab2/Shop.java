@@ -8,8 +8,11 @@ public class Shop {
     }
     public void giveBasket(){
         carts.P();
+        System.out.println("[SHOP] : basket gived. Free_baskets:" + carts.getValue());
     }
     public void returnBasket(){
         carts.V();
+        System.out.println("[SHOP] : basket returned. Free_baskets:" + carts.getValue());
     }
+
 }
