@@ -4,18 +4,19 @@ import java.util.Random;
 
 public class Person implements Runnable{
     public final int pairID;
+    public final int innerID;
     private Waiter waiter;
 
     @Override
     public void run() {
-        System.out.println("PERSON [" + pairID +"] : wants to be seated");
+        System.out.println(Colors.ANSI_GREEN + "PERSON [" + pairID + ":" + innerID +"] : wants to be seated" + Colors.ANSI_RESET);
         while (true) {
             try {
                 waiter.getSeated(this);
-                System.out.println("PERSON [" + pairID + "] : Eating...");
+                System.out.println(Colors.ANSI_CYAN + "PERSON [" + pairID + ":" + innerID+ "] : Eating..." + Colors.ANSI_RESET);
                 Thread.sleep(new Random().nextInt(300));
                 waiter.releaseSeat(this);
-                System.out.println("PERSON [" + pairID + "] : Walks away");
+                System.out.println(Colors.ANSI_RED + "PERSON [" + pairID + ":" + innerID+ "] : Walks away" + Colors.ANSI_RESET);
                 Thread.sleep(new Random().nextInt(300));
 
             } catch (InterruptedException e) {
@@ -26,9 +27,10 @@ public class Person implements Runnable{
 
     }
 
-    public Person(int pairID, Waiter waiter){
+    public Person(int pairID, int innerID, Waiter waiter){
         this.pairID = pairID;
         this.waiter = waiter;
+        this.innerID = innerID;
     }
 
 
