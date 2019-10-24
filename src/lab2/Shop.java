@@ -26,11 +26,16 @@ public class Shop {
         return basketToGive;
     }
     public void returnBasket(Basket basket){
-        carts.V();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         stack_sem.P();
         baskets.push(basket);
         stack_sem.V();
         System.out.println("[SHOP] : basket returned. Free_baskets:" + carts.getValue());
+        carts.V();
     }
 
 }

@@ -1,4 +1,5 @@
-package lab1;
+package lab3.out;
+
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 //        Counter counter = new Counter();
@@ -25,7 +26,7 @@ public class Main {
 
 //        Buffer buffer = new Buffer();
 
-        Buffer buffer = new Buffer();
+        BoundedBuffer buffer = new BoundedBuffer();
         Consumer consumer = new Consumer(buffer, 1);
         Consumer consumer1 = new Consumer(buffer, 2);
         Producer producer = new Producer(buffer);
