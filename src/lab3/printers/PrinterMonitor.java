@@ -1,5 +1,7 @@
 package lab3.printers;
 
+import lab3.waiters.Colors;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
@@ -23,6 +25,7 @@ public class PrinterMonitor {
     public Printer reservePrinter() throws InterruptedException {
         lock.lock();
         while (reservedPrinters == printers.size()){
+            System.out.println(Colors.ANSI_GREEN  + "Waiting for any printer to free" +Colors.ANSI_RESET);
             allReserved.await();
         }
         while(printers.get(lastPrinter).reserved){
