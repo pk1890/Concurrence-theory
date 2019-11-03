@@ -1,11 +1,13 @@
 package lab3.waiters;
 
 import java.util.Random;
+import java.util.concurrent.locks.Condition;
 
 public class Person implements Runnable{
     public final int pairID;
     public final int innerID;
     private Waiter waiter;
+    public Condition waitForPartner;
 
     @Override
     public void run() {
@@ -31,6 +33,7 @@ public class Person implements Runnable{
         this.pairID = pairID;
         this.waiter = waiter;
         this.innerID = innerID;
+        waiter.addToClients(this);
     }
 
 
