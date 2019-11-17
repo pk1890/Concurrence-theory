@@ -1,23 +1,25 @@
-package lab4;
+package lab4.stream;
 
-public class Consumer implements Runnable {
+public class Producer implements Runnable{
+
     private Buffer buff;
     private int sleepTime;
 
-    public Consumer(Buffer buff, int sleepTime){
+    public Producer(Buffer buff, int sleepTime){
         this.buff = buff;
         this.sleepTime = sleepTime;
     }
 
     @Override
     public void run() {
-        while (true){
+        while (true) {
             try {
                 Thread.sleep(sleepTime);
-                buff.consume();
+                buff.produce();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
+
 }

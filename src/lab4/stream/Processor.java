@@ -1,4 +1,4 @@
-package lab4;
+package lab4.stream;
 
 public class Processor implements Runnable {
     private int numberInSequence;

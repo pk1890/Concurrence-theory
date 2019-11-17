@@ -1,4 +1,4 @@
-package lab4;
+package lab4.stream;
 
 import java.util.Random;
 
