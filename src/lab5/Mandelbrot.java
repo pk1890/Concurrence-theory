@@ -179,7 +179,7 @@ public class Mandelbrot extends JFrame {
     public static void main(String[] args) {
 
 
-//        new Mandelbrot(4, TaskModes.TanTasksForThread).setVisible(true);
+        new Mandelbrot(4, TaskModes.TanTasksForThread).setVisible(true);
 
         int [] threadCount = {1, 4, 8};
 
