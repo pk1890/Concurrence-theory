@@ -1,4 +1,4 @@
-package lab4.randomNaive;
+package lab4.randomFairWaiting;
 
 import lab4.Logger;
 
@@ -16,7 +16,7 @@ public class Main {
             M = Integer.parseInt(args[0]);
             processCount = Integer.parseInt(args[1]);
         }
-        Logger.init(processCount, 2*M, "naive");
+        Logger.init(processCount, 2*M, "fair");
 
         Buffer Buffer = new Buffer(M);
 

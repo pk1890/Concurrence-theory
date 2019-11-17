@@ -1,47 +1,49 @@
-package lab4.randomNaive;
+package lab4;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class Logger {
-
     private static double[] measurementCountProducers;
     private static double[] timeSumProducers;
     private static double[] measurementCountConsumers;
     private static double[] timeSumConsumers;
     private static int processCount;
     private static int lineSize;
+    private static String message;
 
-    static void init(int _processCount, int _lineSize) {
+    public static void init(int _processCount, int _lineSize, String _message) {
         processCount = _processCount;
         lineSize = _lineSize;
-        measurementCountProducers = new double[lineSize / 2];
-        timeSumProducers = new double[lineSize / 2];
-        measurementCountConsumers = new double[lineSize / 2];
-        timeSumConsumers = new double[lineSize / 2];
+        measurementCountProducers = new double[lineSize/2];
+        timeSumProducers = new double[lineSize/2];
+        measurementCountConsumers = new double[lineSize/2];
+        timeSumConsumers = new double[lineSize/2];
+        message = _message;
     }
 
-    static synchronized void addMeasurementProducer(double timeDiff, int portionSize) {
+    public static synchronized void addMeasurementProducer(double timeDiff, int portionSize) {
         measurementCountProducers[portionSize]++;
         timeSumProducers[portionSize] += timeDiff;
     }
 
-    static synchronized void addMeasurementConsumer(double timeDiff, int portionSize) {
+    public static synchronized void addMeasurementConsumer(double timeDiff, int portionSize) {
         measurementCountConsumers[portionSize]++;
         timeSumConsumers[portionSize] += timeDiff;
     }
 
-    static synchronized void summary() throws IOException {
+    public static synchronized void summary() throws IOException {
         FileWriter writer = new FileWriter(
-                "./../data/" + lineSize + "_" + processCount + "_P"
+                "./../data/" + lineSize + "_" + processCount + "_P_"+message
         );
 
-        for (int i = 1; i < lineSize / 2; i++) {
-            if (measurementCountProducers[i] == 0) {
+        for(int i = 1; i < lineSize / 2; i++) {
+            if(measurementCountProducers[i] == 0) {
                 writer.append(String.valueOf(i)).append(" ")
                         .append(String.valueOf(0))
                         .append("\n");
-            } else {
+            }
+            else {
                 writer.append(String.valueOf(i)).append(" ")
                         .append(String.valueOf(timeSumProducers[i] / measurementCountProducers[i]))
                         .append("\n");
@@ -50,21 +52,21 @@ public class Logger {
         writer.close();
 
         writer = new FileWriter(
-                "./../data/" + lineSize + "_" + processCount + "_C"
+                "./../data/" + lineSize + "_" + processCount + "_C_"+ message
         );
 
-        for (int i = 1; i < lineSize / 2; i++) {
-            if (measurementCountConsumers[i] == 0) {
+        for(int i = 1; i < lineSize / 2; i++) {
+            if(measurementCountConsumers[i] == 0) {
                 writer.append(String.valueOf(i)).append(" ")
                         .append(String.valueOf(0))
                         .append("\n");
-            } else {
+            }
+            else {
                 writer.append(String.valueOf(i)).append(" ")
                         .append(String.valueOf(timeSumConsumers[i] / measurementCountConsumers[i]))
                         .append("\n");
             }
         }
-
         writer.close();
 
         writer = new FileWriter(
@@ -74,12 +76,13 @@ public class Logger {
 
         double operation = 0;
         double sumTime = 0;
-        for (int i = 0; i < lineSize / 2; i++) {
+        for(int i = 0; i < lineSize / 2; i++) {
             operation += measurementCountConsumers[i];
             sumTime += timeSumConsumers[i];
         }
 
-        writer.append(String.valueOf(lineSize))
+        writer.append(message).append("_")
+                .append(String.valueOf(lineSize))
                 .append("_")
                 .append(String.valueOf(processCount))
                 .append("_C operation: ")
@@ -90,12 +93,13 @@ public class Logger {
                 .append(String.valueOf(sumTime / operation))
                 .append("\n");
 
-        for (int i = 0; i < lineSize / 2; i++) {
+        for(int i = 0; i < lineSize / 2; i++) {
             operation += measurementCountProducers[i];
             sumTime += timeSumProducers[i];
         }
 
-        writer.append(String.valueOf(lineSize))
+        writer.append(message).append("_")
+                .append(String.valueOf(lineSize))
                 .append("_")
                 .append(String.valueOf(processCount))
                 .append("_P operation: ")

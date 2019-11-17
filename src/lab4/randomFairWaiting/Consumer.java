@@ -1,4 +1,4 @@
-package lab4.randomNaive;
+package lab4.randomFairWaiting;
 
 
 public class Consumer implements Runnable {
