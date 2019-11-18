@@ -34,7 +34,7 @@ public class Logger {
 
     public static synchronized void summary() throws IOException {
         FileWriter writer = new FileWriter(
-                "./../data/" + lineSize + "_" + processCount + "_P_"+message
+                "./src/lab4/data/" + lineSize + "_" + processCount + "_P_"+message
         );
 
         for(int i = 1; i < lineSize / 2; i++) {
@@ -52,7 +52,7 @@ public class Logger {
         writer.close();
 
         writer = new FileWriter(
-                "./../data/" + lineSize + "_" + processCount + "_C_"+ message
+                "./src/lab4/data/" + lineSize + "_" + processCount + "_C_"+ message
         );
 
         for(int i = 1; i < lineSize / 2; i++) {
@@ -70,7 +70,7 @@ public class Logger {
         writer.close();
 
         writer = new FileWriter(
-                "./../data/summary",
+                "./src/lab4/data/summary",
                 true
         );
 

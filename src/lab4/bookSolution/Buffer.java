@@ -1,7 +1,9 @@
-package lab4.randomFairWaiting;
+package lab4.bookSolution;
 
 import lab4.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -11,19 +13,27 @@ public class Buffer {
     private int[] data;
     private Lock lock;
     private int M;
-    private Condition notEnoughSpace;
-    private Condition notEnoughProducts;
+    private Condition notEnoughSpaceOthers;
+    private Condition notEnoughSpaceFirst;
+    private boolean isSomeoneInNotEnoughProductsFirst;
+    private boolean isSomeoneInNotEnoughSpaceFirst;
+    private Condition notEnoughProductsOthers;
+    private Condition notEnoughProductsFirst;
     private Random rnd;
 
     public Buffer(int M){
         lock = new ReentrantLock();
-        notEnoughSpace = lock.newCondition();
-        notEnoughProducts = lock.newCondition();
         this.M = M;
         data = new int[2*M];
         rnd = new Random();
-
+        notEnoughProductsOthers = lock.newCondition();
+        notEnoughProductsFirst = lock.newCondition();
+        notEnoughSpaceFirst = lock.newCondition();
+        notEnoughSpaceOthers = lock.newCondition();
+        isSomeoneInNotEnoughProductsFirst = false;
+        isSomeoneInNotEnoughSpaceFirst = false;
     }
+
 
     private void insertProducts(int count) {
         for(int i = 0; count > 0; i++) {
@@ -65,22 +75,19 @@ public class Buffer {
         lock.lock();
         try {
             timestamp = System.nanoTime();
+            if(isSomeoneInNotEnoughSpaceFirst) notEnoughSpaceOthers.await();
             while(getFreeSpace() < (portionSize)) {
 //                System.out.println("P[" + producerId + "] try to produce " + portionSize + " items; Free space: " + getFreeSpace() + "; Products: " + getUsedSpace());
-                notEnoughSpace.await();
+                notEnoughSpaceFirst.await();
             }
             Logger.addMeasurementProducer(System.nanoTime() - timestamp, portionSize);
 //            System.out.println("P[" + producerId + "] produce " + portionSize + " items; Free space: " + getFreeSpace() + "; Products: " + getUsedSpace());
             insertProducts(portionSize);
-            notEnoughProducts.signalAll();
+            notEnoughSpaceOthers.signal();
+            notEnoughSpaceFirst.signal();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            try {
-                Thread.sleep(rnd.nextInt(M - portionSize));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             lock.unlock();
         }
     }
@@ -91,22 +98,19 @@ public class Buffer {
         lock.lock();
         try {
             timestamp = System.nanoTime();
+            if(isSomeoneInNotEnoughProductsFirst) notEnoughProductsOthers.await();
             while(getUsedSpace() < portionSize) {
 //                System.out.println("C[" + consumerId + "] try to consume " + portionSize + " items; Free space: " + getFreeSpace() + "; Products: " + getUsedSpace());
-                notEnoughProducts.await();
+                notEnoughProductsFirst.await();
             }
             Logger.addMeasurementConsumer(System.nanoTime() - timestamp, portionSize);
 //            System.out.println("C[" + consumerId + "] consume " + portionSize + " items; Free space: " + getFreeSpace() + "; Products: " + getUsedSpace());
             getProducts(portionSize);
-            notEnoughSpace.signalAll();
+            notEnoughProductsOthers.signal();
+            notEnoughProductsFirst.signal();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            try {
-                Thread.sleep(rnd.nextInt(M - portionSize));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             lock.unlock();
 
         }
