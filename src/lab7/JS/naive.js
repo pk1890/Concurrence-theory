@@ -14,6 +14,7 @@
 //    do widelców. Wyniki przedstaw na wykresach.
 
 const async = require('async');
+const { PerformanceObserver, performance } = require('perf_hooks');
 
 var Fork = function() {
     this.state = 0;
@@ -32,7 +33,7 @@ Fork.prototype.acquire = function(cb) {
                 f(2*delay);
             }else{
                 this.state = 1;
-                console.log("fork acquired");
+                // console.log("fork acquired");
                 if(cb) cb();
             }
         }, delay);
@@ -58,13 +59,23 @@ Philosopher.prototype.startNaive = function(count) {
         f2 = this.f2,
         id = this.id;
 
+    var times = [];
+
     var startAndEat = function(n){
         if(n === 0) {
+            var sum = 0;
+            for(var i = 0; i < times.length; i++){
+                sum += times[i];
+            }
+            console.log(id+":"+sum/times.length);
             return;
         }
+        start = performance.now();
         forks[f1].acquire(()=>{
             console.log(id+"acquired first");
             forks[f2].acquire(()=>{
+                end = performance.now();
+                times.push(end-start);
                 console.log("eating " + id);
                 setTimeout(() => {
                     forks[f2].release();
@@ -95,6 +106,7 @@ Philosopher.prototype.startAsym = function(count) {
         id = this.id;
 
     var f1,f2;
+    var times = [];
     if(id % 2 === 0){
         f1 = this.f2;
         f2 = this.f1;
@@ -104,16 +116,24 @@ Philosopher.prototype.startAsym = function(count) {
     }
     var startAndEat = function(n){
         if(n === 0) {
+            var sum = 0;
+            for(var i = 0; i < times.length; i++){
+                sum += times[i];
+            }
+            console.log(id+":"+sum/times.length);
             return;
         }
+        start = performance.now();
         forks[f1].acquire(()=>{
-            console.log(id+"acquired first");
+            // console.log(id+"acquired first");
             forks[f2].acquire(()=>{
-                console.log("eating " + id);
+                end = performance.now();
+                times.push(end-start);
+                // console.log("eating " + id);
                 setTimeout(() => {
                     forks[f2].release();
                     forks[f1].release();
-                    console.log("Stopped eating "+ id);
+                    // console.log("Stopped eating "+ id);
                     rest(n);
                 },  Math.floor((Math.random()*100)+50));
             })
@@ -135,21 +155,79 @@ Philosopher.prototype.startAsym = function(count) {
     // podnoszenia widelców -- jedzenia -- zwalniania widelców
 }
 
+var Jugde = function(n){
+    this.state = n-1;
+    return this;
+}
+
+Jugde.prototype.acquire = function(cb){
+    var f = (delay) =>{
+        setTimeout(() => {
+            if(this.state <= 0){
+                f(2*delay);
+            }else{
+                this.state -= 1;
+                if(cb) cb();
+            }
+        }, delay);
+    }
+    f(1);
+}
+
+Jugde.prototype.release = function() { 
+    this.state +=1; 
+}
+
 Philosopher.prototype.startConductor = function(count) {
     var forks = this.forks,
         f1 = this.f1,
         f2 = this.f2,
         id = this.id;
-    
+ 
+    var judge = new Jugde(forks.length);
+    var start, end;
+    var times = [];
+
+    var startAndEat = function(n){
+        if(n === 0) {
+            var sum = 0;
+            for(var i = 0; i < times.length; i++){
+                sum += times[i];
+            }
+            console.log(id+":"+sum/times.length);
+            return;
+        }
+        start = performance.now();
+        judge.acquire(() =>{
+            forks[f1].acquire(()=>{
+                // console.log(id+"acquired first");
+                forks[f2].acquire(()=>{
+                    end = performance.now();
+                    times.push(end-start);
+                    // console.log("eating " + id);
+                    setTimeout(() => {
+                        forks[f2].release();
+                        forks[f1].release();
+                        judge.release();
+                        // console.log("Stopped eating "+ id);
+                        rest(n);
+                    },  Math.floor((Math.random()*100)+50));
+                })
+            });
+        });
+    }
+    var rest = function(n){
+        setTimeout(() => {
+            // console.log("MLEKO"+n);
+            startAndEat(n-1);            
+        },  Math.floor((Math.random()*100)+50));
+    }
+
+    rest(count+1);
     // zaimplementuj rozwiązanie z kelnerem
     // każdy filozof powinien 'count' razy wykonywać cykl
     // podnoszenia widelców -- jedzenia -- zwalniania widelców
 }
-
-
-// TODO: wersja z jednoczesnym podnoszeniem widelców
-// Algorytm BEB powinien obejmować podnoszenie obu widelców, 
-// a nie każdego z osobna
 
 
 var N = 5;
@@ -164,5 +242,5 @@ for (var i = 0; i < N; i++) {
 }
 
 for (var i = 0; i < N; i++) {
-    philosophers[i].startAsym(10);
+    philosophers[i].startConductor(5);
 }
