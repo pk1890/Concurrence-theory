@@ -58,6 +58,10 @@ public class Main {
                             } ).number;
             end = System.nanoTime();
             System.out.println("[Parallel] Word no: " + words_no + " Time: " + (end - start) / 10000);
+            start = System.nanoTime();
+            long words_no_2 = Stream.of(text).parallel().map((s) -> s.split(" +").length).reduce(0, Integer::sum);
+            end = System.nanoTime();
+            System.out.println("[ParallelStream_2] Word no: " + words_no_2 + " Time: " + (end - start) / 10000);
         }catch (FileNotFoundException e) {
             e.printStackTrace();
         }

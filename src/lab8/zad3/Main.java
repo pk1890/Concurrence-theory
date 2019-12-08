@@ -1,12 +1,10 @@
 package lab8.zad3;
 
-import com.sun.corba.se.spi.orbutil.threadpool.ThreadPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +31,7 @@ public class Main {
         }
     }
 
-    public static Future<Integer> intelectualGetPrice(){
+    public static CompletableFuture<Integer> intelectualGetPrice(){
         CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
 
         Executors.newCachedThreadPool().submit(() -> {
@@ -55,20 +53,14 @@ public class Main {
         List<Integer> ret = new ArrayList<>();
 
         startFuture = System.currentTimeMillis();
-        System.out.println(Arrays.toString(IntStream.range(0, 200)
-                .mapToObj((x) -> {
-                    CompletableFuture<Integer> cf = new CompletableFuture<>();
-                    Executors.newCachedThreadPool().submit(() -> {cf.complete(getPrice());});
-                    return cf;
-                })
-                .map((x) -> {
-                    try {
-                        return x.get();
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }).toArray()));
+        List<CompletableFuture<Integer>>l = new ArrayList<>();
+        for (int i = 0; i < 200; i++){
+            l.add(intelectualGetPrice());
+        }
+        for(CompletableFuture<Integer> f: l){
+            try { ret.add(f.get()); }catch(Exception e ){}
+        }
+        System.out.println(ret.toString());
         endFuture = System.currentTimeMillis();
 
         System.out.println("NAIVE: " + (end-start));
