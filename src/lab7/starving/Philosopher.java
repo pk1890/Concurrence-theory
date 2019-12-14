@@ -13,10 +13,14 @@ public class Philosopher implements Runnable {
 
 
     public Semaphore leftFork(){
-        return table.forks.get( (number) );
+        return number %2 == 0 ?
+                table.forks.get( (number) ) :
+                table.forks.get( (number+1)%table.FORKS_NO );
     }
-    public Semaphore rightFork(){
-        return table.forks.get( (number+1) % table.FORKS_NO );
+    public Semaphore rightFork() {
+        return number %2 == 0 ?
+                table.forks.get( (number+1)%table.FORKS_NO ):
+                table.forks.get( (number) ) ;
     }
 
     public Philosopher(Table table, int no, Logger logger){

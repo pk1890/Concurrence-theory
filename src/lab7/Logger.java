@@ -24,6 +24,6 @@ public class Logger {
         for(List<Double> times: philosophersWaitingTimes){
             means.add(times.stream().reduce(Double.parseDouble("0"), Double::sum)/ (long) times.size());
         }
-        System.out.println("MEANS: " + means);
+        System.out.println(means);
     }
 }

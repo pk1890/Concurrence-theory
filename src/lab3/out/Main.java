@@ -24,7 +24,7 @@ public class Main {
 //
 //        System.out.println(counter.getVal());
 
-//        Buffer buffer = new Buffer();
+//        buffer buffer = new buffer();
 
         BoundedBuffer buffer = new BoundedBuffer();
         Consumer consumer = new Consumer(buffer, 1);

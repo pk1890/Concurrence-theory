@@ -2,7 +2,8 @@ package lab7.starving;
 
 import lab7.AlgoType;
 import lab7.Logger;
-import sun.awt.X11.XStateProtocol;
+
+
 
 public class Main {
 

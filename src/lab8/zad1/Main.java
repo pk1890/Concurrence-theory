@@ -1,5 +1,5 @@
 package lab8.zad1;
-import sun.awt.X11.XSystemTrayPeer;
+//import sun.awt.X11.XSystemTrayPeer;
 
 import java.io.File;
 import java.io.FileNotFoundException;

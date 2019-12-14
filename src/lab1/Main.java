@@ -23,7 +23,7 @@ public class Main {
 //
 //        System.out.println(counter.getVal());
 
-//        Buffer buffer = new Buffer();
+//        buffer buffer = new buffer();
 
         Buffer buffer = new Buffer();
         Consumer consumer = new Consumer(buffer, 1);
